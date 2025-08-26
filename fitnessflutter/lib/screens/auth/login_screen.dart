@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Hesabınıza giriş yapın',
+                      'Hesabınıza giriş yapınız',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
