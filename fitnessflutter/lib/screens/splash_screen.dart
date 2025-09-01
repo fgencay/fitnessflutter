@@ -48,16 +48,26 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void _checkAuthStatus() async {
-    await Future.delayed(const Duration(seconds: 3));
+    // Wait for the animation to complete
+    await Future.delayed(const Duration(seconds: 2));
     
     if (mounted) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      
+      // Ensure auth status is checked
       await authProvider.checkAuthStatus();
       
-      if (authProvider.isAuthenticated) {
-        NavigationService.navigateAndClearStack(AppRoutes.dashboard);
-      } else {
-        NavigationService.navigateAndClearStack(AppRoutes.login);
+      // Add a small delay to show the loading animation
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      if (mounted) {
+        if (authProvider.isAuthenticated && authProvider.currentUser != null) {
+          // User is logged in, go to dashboard
+          NavigationService.navigateAndClearStack(AppRoutes.dashboard);
+        } else {
+          // User not logged in, go to login screen
+          NavigationService.navigateAndClearStack(AppRoutes.login);
+        }
       }
     }
   }

@@ -11,6 +11,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String workoutDetail = '/workout-detail';
   static const String dietDetail = '/diet-detail';
+  static const String authDebug = '/auth-debug';
 }
 
 class NavigationService {

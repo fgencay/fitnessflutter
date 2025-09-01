@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'providers/fitness_provider.dart';
 import 'services/navigation_service.dart';
@@ -11,8 +13,13 @@ import 'screens/bmi/bmi_calculator_screen.dart';
 import 'screens/workout/workout_program_screen.dart';
 import 'screens/diet/diet_program_screen.dart';
 import 'screens/profile/profile_screen.dart';
+import 'screens/debug/auth_debug_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const FitnessApp());
 }
 
@@ -23,7 +30,9 @@ class FitnessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider()..checkAuthStatus(),
+        ),
         ChangeNotifierProvider(create: (_) => FitnessProvider()),
       ],
       child: MaterialApp(
@@ -69,6 +78,7 @@ class FitnessApp extends StatelessWidget {
           AppRoutes.workoutProgram: (context) => const WorkoutProgramScreen(),
           AppRoutes.dietProgram: (context) => const DietProgramScreen(),
           AppRoutes.profile: (context) => const ProfileScreen(),
+          AppRoutes.authDebug: (context) => const AuthDebugScreen(),
         },
       ),
     );

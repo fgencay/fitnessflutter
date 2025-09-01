@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/navigation_service.dart';
+import '../../widgets/firebase_test_widget.dart';
+import '../../widgets/firestore_rules_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _rememberMe = false;
+  bool _rememberMe = true;
 
   @override
   void dispose() {
@@ -29,19 +31,36 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
+      // Clear any previous error messages
+      authProvider.clearError();
+      
       final success = await authProvider.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
+        rememberMe: _rememberMe,
       );
 
       if (mounted) {
         if (success) {
           NavigationService.navigateAndClearStack(AppRoutes.dashboard);
         } else {
+          // Display specific error message from AuthProvider
+          final errorMessage = authProvider.errorMessage ?? 'Giriş sırasında bir hata oluştu';
+          
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Geçersiz email veya şifre'),
+            SnackBar(
+              content: Text(errorMessage),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+              action: authProvider.errorMessage?.contains('bulunamadı') == true
+                  ? SnackBarAction(
+                      label: 'Kayıt Ol',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        NavigationService.navigateTo(AppRoutes.register);
+                      },
+                    )
+                  : null,
             ),
           );
         }
@@ -178,14 +197,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Şifre sıfırlama özelliği yakında...'),
-                              ),
+                            // Show Firebase test dialog for debugging
+                            showDialog(
+                              context: context,
+                              builder: (context) => const FirebaseTestWidget(),
                             );
                           },
-                          child: const Text('Şifremi unuttum'),
+                          child: const Text('Firebase Test'),
                         ),
                       ],
                     ),
@@ -253,6 +271,49 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // Debug buttons
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => const FirebaseTestWidget(),
+                                  );
+                                },
+                                child: const Text('Firebase Test'),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  NavigationService.navigateTo(AppRoutes.authDebug);
+                                },
+                                child: const Text('Auth Debug'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const FirestoreRulesHelper(),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.orange,
+                          ),
+                          child: const Text('Firestore Rules Yardımcısı'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

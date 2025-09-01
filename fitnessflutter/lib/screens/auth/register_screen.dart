@@ -89,6 +89,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
+      // Clear any previous error messages
+      authProvider.clearError();
+      
       final success = await authProvider.register(
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -105,10 +108,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (success) {
           NavigationService.navigateAndClearStack(AppRoutes.dashboard);
         } else {
+          // Display specific error message from AuthProvider
+          final errorMessage = authProvider.errorMessage ?? 'Hesap oluşturulurken bir hata oluştu';
+          
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Bu email adresi zaten kullanılıyor'),
+            SnackBar(
+              content: Text(errorMessage),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+              action: authProvider.errorMessage?.contains('zaten kullanımda') == true
+                  ? SnackBarAction(
+                      label: 'Giriş Yap',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        NavigationService.navigateAndReplace(AppRoutes.login);
+                      },
+                    )
+                  : null,
             ),
           );
         }

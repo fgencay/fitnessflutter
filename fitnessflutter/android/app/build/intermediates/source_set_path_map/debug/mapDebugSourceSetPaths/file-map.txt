@@ -1,0 +1,8 @@
+com.example.fitnessflutter.app-pngs-0 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\generated\res\pngs\debug
+com.example.fitnessflutter.app-res-1 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\generated\res\processDebugGoogleServices
+com.example.fitnessflutter.app-resValues-2 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\generated\res\resValues\debug
+com.example.fitnessflutter.app-packageDebugResources-3 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.fitnessflutter.app-packageDebugResources-4 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.fitnessflutter.app-debug-5 C:\olsun\fitnessflutter\fitnessflutter\android\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.fitnessflutter.app-debug-6 C:\olsun\fitnessflutter\fitnessflutter\android\app\src\debug\res
+com.example.fitnessflutter.app-main-7 C:\olsun\fitnessflutter\fitnessflutter\android\app\src\main\res
