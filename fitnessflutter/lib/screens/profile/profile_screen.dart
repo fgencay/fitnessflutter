@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 import '../../providers/fitness_provider.dart';
 import '../../services/navigation_service.dart';
 import '../../models/user_model.dart';
@@ -27,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: Consumer<AuthProvider>(
+      body: Consumer<BaseAuthProvider>(
         builder: (context, authProvider, child) {
           final user = authProvider.currentUser;
           if (user == null) {
@@ -368,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _logout() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
     final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
     
     await authProvider.logout();

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
-import '../../providers/auth_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // 👈 displayName için eklendi
+import '../../providers/base_auth_provider.dart';
 import '../../services/navigation_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _pageController = PageController();
-  
+
   // Controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -23,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
-  
+
   // Form data
   String _selectedGender = 'Erkek';
   String _selectedFitnessGoal = 'maintain';
@@ -79,57 +80,94 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool _validateFirstPage() {
     return _emailController.text.isNotEmpty &&
-           EmailValidator.validate(_emailController.text) &&
-           _passwordController.text.length >= 6 &&
-           _passwordController.text == _confirmPasswordController.text &&
-           _nameController.text.isNotEmpty;
+        EmailValidator.validate(_emailController.text) &&
+        _passwordController.text.length >= 6 &&
+        _passwordController.text == _confirmPasswordController.text &&
+        _nameController.text.isNotEmpty;
   }
 
   Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
-      // Clear any previous error messages
-      authProvider.clearError();
-      
-      final success = await authProvider.register(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        name: _nameController.text.trim(),
-        age: int.parse(_ageController.text),
-        height: double.parse(_heightController.text),
-        weight: double.parse(_weightController.text),
-        gender: _selectedGender,
-        fitnessGoal: _selectedFitnessGoal,
-        activityLevel: _selectedActivityLevel,
-      );
+    if (!_formKey.currentState!.validate()) return;
 
-      if (mounted) {
-        if (success) {
-          NavigationService.navigateAndClearStack(AppRoutes.dashboard);
-        } else {
-          // Display specific error message from AuthProvider
-          final errorMessage = authProvider.errorMessage ?? 'Hesap oluşturulurken bir hata oluştu';
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMessage),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 5),
-              action: authProvider.errorMessage?.contains('zaten kullanımda') == true
-                  ? SnackBarAction(
-                      label: 'Giriş Yap',
-                      textColor: Colors.white,
-                      onPressed: () {
-                        NavigationService.navigateAndReplace(AppRoutes.login);
-                      },
-                    )
-                  : null,
-            ),
-          );
-        }
-      }
+    // Sayı parse'larını güvenli yapalım (hata fırlatmasın)
+    final parsedAge = int.tryParse(_ageController.text);
+    final parsedHeight = double.tryParse(_heightController.text);
+    final parsedWeight = double.tryParse(_weightController.text);
+
+    if (parsedAge == null || parsedAge < 16 || parsedAge > 100) {
+      _showError('Geçerli bir yaş girin (16-100).');
+      return;
     }
+    if (parsedHeight == null || parsedHeight < 100 || parsedHeight > 250) {
+      _showError('Geçerli bir boy girin (100-250 cm).');
+      return;
+    }
+    if (parsedWeight == null || parsedWeight < 30 || parsedWeight > 300) {
+      _showError('Geçerli bir kilo girin (30-300 kg).');
+      return;
+    }
+
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
+
+    // Eski hatayı temizle
+    authProvider.clearError();
+
+    final success = await authProvider.register(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+      name: _nameController.text.trim(),
+      age: parsedAge,
+      height: parsedHeight,
+      weight: parsedWeight,
+      gender: _selectedGender,
+      fitnessGoal: _selectedFitnessGoal,
+      activityLevel: _selectedActivityLevel,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      // ✅ Kayıt başarılıysa displayName'i güncelle
+      try {
+        final fullName = _nameController.text.trim();
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null && fullName.isNotEmpty) {
+          await user.updateDisplayName(fullName);
+          await user.reload();
+        }
+      } catch (_) {
+        // Sessiz geçelim; UI yine de devam etsin
+      }
+
+      // Dashboard'a yönlendir
+      NavigationService.navigateAndClearStack(AppRoutes.dashboard);
+    } else {
+      // Provider'ın döndürdüğü spesifik hata mesajını göster
+      final errorMessage =
+          authProvider.errorMessage ?? 'Hesap oluşturulurken bir hata oluştu';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+          action: authProvider.errorMessage?.contains('zaten kullanımda') == true
+              ? SnackBarAction(
+                  label: 'Giriş Yap',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    NavigationService.navigateAndReplace(AppRoutes.login);
+                  },
+                )
+              : null,
+        ),
+      );
+    }
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red),
+    );
   }
 
   @override
@@ -191,9 +229,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
           const SizedBox(height: 40),
-          
+
           // Name Field
           TextFormField(
             controller: _nameController,
@@ -209,9 +246,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Email Field
           TextFormField(
             controller: _emailController,
@@ -231,9 +267,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Password Field
           TextFormField(
             controller: _passwordController,
@@ -263,9 +298,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Confirm Password Field
           TextFormField(
             controller: _confirmPasswordController,
@@ -295,9 +329,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          
           const SizedBox(height: 40),
-          
+
           // Next Button
           SizedBox(
             width: double.infinity,
@@ -310,9 +343,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Login Link
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -354,9 +386,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
           const SizedBox(height: 40),
-          
+
           // Age Field
           TextFormField(
             controller: _ageController,
@@ -378,9 +409,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Gender Selection
           DropdownButtonFormField<String>(
             initialValue: _selectedGender,
@@ -400,9 +430,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               });
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Height and Weight Row
           Row(
             children: [
@@ -436,7 +465,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Kilo',
                     hintText: '70',
-                    prefixIcon: Icon(Icons.monitor_weight_outlined),
+                    prefixIcon: const Icon(Icons.monitor_weight_outlined),
                     suffixText: 'kg',
                   ),
                   validator: (value) {
@@ -453,9 +482,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ],
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Fitness Goal
           DropdownButtonFormField<String>(
             initialValue: _selectedFitnessGoal,
@@ -475,9 +503,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               });
             },
           ),
-          
           const SizedBox(height: 20),
-          
+
           // Activity Level
           DropdownButtonFormField<String>(
             initialValue: _selectedActivityLevel,
@@ -497,11 +524,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               });
             },
           ),
-          
           const SizedBox(height: 40),
-          
+
           // Register Button
-          Consumer<AuthProvider>(
+          Consumer<BaseAuthProvider>(
             builder: (context, authProvider, child) {
               return SizedBox(
                 width: double.infinity,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 import '../../providers/fitness_provider.dart';
 import '../../models/diet_model.dart';
 
@@ -29,7 +29,7 @@ class _DietProgramScreenState extends State<DietProgramScreen>
   }
 
   void _loadDietProgram() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
     final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
     
     if (authProvider.currentUser != null) {
@@ -38,7 +38,7 @@ class _DietProgramScreenState extends State<DietProgramScreen>
   }
 
   void _generateNewDietProgram() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
     final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
     final user = authProvider.currentUser;
     final bmi = fitnessProvider.currentBMI;

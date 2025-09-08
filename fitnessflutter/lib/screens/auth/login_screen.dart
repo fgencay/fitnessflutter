@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 import '../../services/navigation_service.dart';
 import '../../widgets/firebase_test_widget.dart';
 import '../../widgets/firestore_rules_helper.dart';
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       
       // Clear any previous error messages
       authProvider.clearError();
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     
                     const SizedBox(height: 16),
                     
-                    // Remember Me & Forgot Password
+                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -195,23 +195,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             const Text('Beni hatırla'),
                           ],
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // Show Firebase test dialog for debugging
-                            showDialog(
-                              context: context,
-                              builder: (context) => const FirebaseTestWidget(),
-                            );
-                          },
-                          child: const Text('Firebase Test'),
-                        ),
+                        
                       ],
                     ),
                     
                     const SizedBox(height: 30),
                     
                     // Login Button
-                    Consumer<AuthProvider>(
+                    Consumer<BaseAuthProvider>(
                       builder: (context, authProvider, child) {
                         return SizedBox(
                           width: double.infinity,
@@ -275,46 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     
                     const SizedBox(height: 16),
                     
-                    // Debug buttons
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => const FirebaseTestWidget(),
-                                  );
-                                },
-                                child: const Text('Firebase Test'),
-                              ),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  NavigationService.navigateTo(AppRoutes.authDebug);
-                                },
-                                child: const Text('Auth Debug'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => const FirestoreRulesHelper(),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.orange,
-                          ),
-                          child: const Text('Firestore Rules Yardımcısı'),
-                        ),
-                      ],
-                    ),
+                   
                   ],
                 ),
               ),

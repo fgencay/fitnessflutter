@@ -1,1 +1,0 @@
-C:\olsun\fitnessflutter\fitnessflutter\android\app\src\main\kotlin\com\example\fitnessflutter\MainActivity.kt

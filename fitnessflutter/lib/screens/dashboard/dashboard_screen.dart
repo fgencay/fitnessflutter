@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 import '../../providers/fitness_provider.dart';
 import '../../services/navigation_service.dart';
 import '../../models/user_model.dart';
@@ -22,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _loadUserData() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
     final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
     
     if (authProvider.currentUser != null) {
@@ -45,7 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: Consumer2<AuthProvider, FitnessProvider>(
+      body: Consumer2<BaseAuthProvider, FitnessProvider>(
         builder: (context, authProvider, fitnessProvider, child) {
           final user = authProvider.currentUser;
           if (user == null) {

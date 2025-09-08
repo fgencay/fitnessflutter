@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 
 class AuthDebugScreen extends StatelessWidget {
   const AuthDebugScreen({super.key});
@@ -12,7 +12,7 @@ class AuthDebugScreen extends StatelessWidget {
         title: const Text('Auth Debug'),
         backgroundColor: Colors.orange,
       ),
-      body: Consumer<AuthProvider>(
+      body: Consumer<BaseAuthProvider>(
         builder: (context, authProvider, child) {
           return Padding(
             padding: const EdgeInsets.all(16.0),

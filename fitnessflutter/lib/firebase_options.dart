@@ -70,11 +70,13 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'YOUR_WINDOWS_API_KEY',
-    appId: 'YOUR_WINDOWS_APP_ID',
-    messagingSenderId: 'YOUR_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-    storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+    apiKey: 'AIzaSyA_G0WOTlwEZXTE2g6jLgkgWkf5hkblR9k',
+    appId: '1:650860941065:web:8de3a6a0f61d1ceafb0dd8',
+    messagingSenderId: '650860941065',
+    projectId: 'fitlife-fitness-uygulamasi',
+    authDomain: 'fitlife-fitness-uygulamasi.firebaseapp.com',
+    storageBucket: 'fitlife-fitness-uygulamasi.firebasestorage.app',
+    measurementId: 'G-SQ814X592Z',
   );
+
 }

@@ -3,8 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart' as app_user;
+import 'base_auth_provider.dart';
 
-class AuthProvider extends ChangeNotifier {
+class AuthProvider extends BaseAuthProvider {
   app_user.User? _currentUser;
   bool _isAuthenticated = false;
   bool _isLoading = false;

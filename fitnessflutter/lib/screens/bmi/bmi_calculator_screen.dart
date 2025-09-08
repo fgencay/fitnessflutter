@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/base_auth_provider.dart';
 import '../../providers/fitness_provider.dart';
 import '../../models/bmi_model.dart';
 
@@ -25,7 +25,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   }
 
   void _loadUserData() {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
     final user = authProvider.currentUser;
     
     if (user != null && _useUserData) {
@@ -55,7 +55,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
       fitnessProvider.calculateBMI(height, weight);
       
       // Update user data if different
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       final user = authProvider.currentUser;
       if (user != null && (user.height != height || user.weight != weight)) {
         final updatedUser = user.copyWith(height: height, weight: weight);
@@ -66,7 +66,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
 
   void _generatePrograms() {
     if (_bmiResult != null) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
       final user = authProvider.currentUser;
       
@@ -142,7 +142,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               const SizedBox(height: 30),
               
               // Use Current Data Toggle
-              Consumer<AuthProvider>(
+              Consumer<BaseAuthProvider>(
                 builder: (context, authProvider, child) {
                   if (authProvider.currentUser != null) {
                     return Card(
@@ -362,7 +362,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
         const SizedBox(height: 20),
         
         // Ideal Weight Range
-        Consumer<AuthProvider>(
+        Consumer<BaseAuthProvider>(
           builder: (context, authProvider, child) {
             if (authProvider.currentUser != null) {
               final height = double.parse(_heightController.text);

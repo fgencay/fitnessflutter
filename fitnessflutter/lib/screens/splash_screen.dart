@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import '../providers/base_auth_provider.dart';
 import '../services/navigation_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     await Future.delayed(const Duration(seconds: 2));
     
     if (mounted) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       
       // Ensure auth status is checked
       await authProvider.checkAuthStatus();
