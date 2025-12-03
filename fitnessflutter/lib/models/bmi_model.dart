@@ -1,36 +1,17 @@
 enum BMICategory {
-  underweight,
-  normal,
-  overweight,
-  obese,
-}
-
+  underweight,  normal,  overweight,  obese,}
 class BMIData {
-  final double bmi;
-  final BMICategory category;
-  final String categoryText;
-  final String recommendation;
+  final double bmi;  final BMICategory category;
+  final String categoryText;  final String recommendation;
   final String description;
-
   BMIData({
-    required this.bmi,
-    required this.category,
-    required this.categoryText,
-    required this.recommendation,
-    required this.description,
-  });
-
-
-  static BMIData calculateBMI(double height, double weight) {
-   
+    required this.bmi,    required this.category,
+    required this.categoryText,    required this.recommendation,
+    required this.description,  });
+  static BMIData calculateBMI(double height, double weight) {   
     double heightInMeters = height / 100;
-    double bmi = weight / (heightInMeters * heightInMeters);
-    
-    BMICategory category;
-    String categoryText;
-    String recommendation;
-    String description;
-
+    double bmi = weight / (heightInMeters * heightInMeters);    
+    BMICategory category;    String categoryText; String recommendation; String description;
     if (bmi < 18.5) {
       category = BMICategory.underweight;
       categoryText = 'Zayıf';
@@ -52,61 +33,39 @@ class BMIData {
       recommendation = 'Acil kilo verme gerekli';
       description = 'Sağlık riskleri nedeniyle profesyonel destek alarak kilo vermeye odaklanın.';
     }
-
     return BMIData(
       bmi: double.parse(bmi.toStringAsFixed(1)),
-      category: category,
-      categoryText: categoryText,
-      recommendation: recommendation,
-      description: description,
-    );
-  }
-
-  
+      category: category,categoryText: categoryText,
+      recommendation: recommendation, description: description,
+    );  } 
   static Map<String, double> getIdealWeightRange(double height) {
     double heightInMeters = height / 100;
     double minWeight = 18.5 * (heightInMeters * heightInMeters);
-    double maxWeight = 24.9 * (heightInMeters * heightInMeters);
-    
+    double maxWeight = 24.9 * (heightInMeters * heightInMeters);    
     return {
       'min': double.parse(minWeight.toStringAsFixed(1)),
       'max': double.parse(maxWeight.toStringAsFixed(1)),
-    };
-  }
-
-  // Calculate daily calorie needs based on BMI and activity level
+    };  } 
   double calculateDailyCalories(double weight, double height, int age, String gender, String activityLevel) {
-    double bmr;
-    
-    // Calculate BMR using Mifflin-St Jeor Equatino
+    double bmr;  
     if (gender.toLowerCase() == 'erkek') {
       bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
     } else {
-      bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-    }
-
-    // Activity factor
+      bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);    }  
     double activityFactor;
     switch (activityLevel) {
       case 'sedentary':
-        activityFactor = 1.2;
-        break;
+        activityFactor = 1.2;    break;
       case 'light':
-        activityFactor = 1.375;
-        break;
+        activityFactor = 1.375;  break;
       case 'moderate':
-        activityFactor = 1.55;
-        break;
+        activityFactor = 1.55;   break;
       case 'active':
-        activityFactor = 1.725;
-        break;
+        activityFactor = 1.725;  break;
       case 'very_active':
-        activityFactor = 1.9;
-        break;
+        activityFactor = 1.9;    break;
       default:
-        activityFactor = 1.2;
-    }
-
+        activityFactor = 1.2;   }
     return bmr * activityFactor;
   }
 }

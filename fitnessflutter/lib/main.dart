@@ -3,14 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'firebase_options.dart';
 import 'providers/base_auth_provider.dart';
 import 'providers/auth_provider.dart' as custom;
 import 'providers/web_auth_provider.dart';
 import 'providers/fitness_provider.dart';
 import 'services/navigation_service.dart';
-
 import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
@@ -22,10 +20,10 @@ import 'screens/profile/profile_screen.dart';
 import 'screens/debug/auth_debug_screen.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); 
   if (kIsWeb) {
     await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   }
@@ -38,11 +36,11 @@ class FitnessApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      //tüm ekranların ulaşabileceği iki tane merkez veri yöneticisi tanımlandı
       providers: [
        ChangeNotifierProvider<BaseAuthProvider>(
   create: (_) => custom.AuthProvider(), 
 ),
-
         ChangeNotifierProvider(create: (_) => FitnessProvider()),
       ],
       child: MaterialApp(

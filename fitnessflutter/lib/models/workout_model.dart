@@ -1,117 +1,113 @@
 class Exercise {
-  final String name;
+  final String name;  
   final String description;
-  final int sets;
+  final int sets;  
   final int reps;
-  final int duration; // in seconds for time-based exercises
-  final String type; // 'strength', 'cardio', 'flexibility'
-  final String targetMuscle;
-  final String difficulty; // 'beginner', 'intermediate', 'advanced'
+  final int duration;  
+  final String type; 
+  final String targetMuscle;  
+  final String difficulty; 
 
   Exercise({
-    required this.name,
+
+    required this.name,   
     required this.description,
-    this.sets = 1,
-    this.reps = 1,
+    this.sets = 1,    
+    this.reps = 1,    
     this.duration = 0,
-    required this.type,
+    required this.type,    
     required this.targetMuscle,
-    required this.difficulty,
-  });
+    required this.difficulty,  }
+    );
 
   Map<String, dynamic> toMap() {
+
     return {
-      'name': name,
-      'description': description,
+
+      'name': name, 
+      'description': description, 
       'sets': sets,
-      'reps': reps,
-      'duration': duration,
+      'reps': reps, 
+      'duration': duration,  
       'type': type,
       'targetMuscle': targetMuscle,
-      'difficulty': difficulty,
-    };
-  }
+      'difficulty': difficulty,  
+       };
+        }
 
   factory Exercise.fromMap(Map<String, dynamic> map) {
+
     return Exercise(
+
       name: map['name'] ?? '',
-      description: map['description'] ?? '',
+      description: map['description'] ?? '',   
       sets: map['sets'] ?? 1,
-      reps: map['reps'] ?? 1,
+      reps: map['reps'] ?? 1,  
       duration: map['duration'] ?? 0,
-      type: map['type'] ?? '',
+      type: map['type'] ?? '',   
       targetMuscle: map['targetMuscle'] ?? '',
-      difficulty: map['difficulty'] ?? '',
-    );
-  }
-}
+      difficulty: map['difficulty'] ?? '',  
+        );  
+        }}
+
 
 class WorkoutDay {
   final String dayName;
-  final List<Exercise> exercises;
-  final String focus; // 'upper_body', 'lower_body', 'full_body', 'cardio', 'rest'
+  final List<Exercise> exercises;  
+  final String focus;
 
   WorkoutDay({
-    required this.dayName,
-    required this.exercises,
-    required this.focus,
-  });
-
+   required this.dayName,required this.exercises, required this.focus, });
   Map<String, dynamic> toMap() {
-    return {
-      'dayName': dayName,
-      'exercises': exercises.map((e) => e.toMap()).toList(),
-      'focus': focus,
-    };
-  }
-
+    return { 'dayName': dayName,
+      'exercises': exercises.map((e) => e.toMap()).toList(), 'focus': focus,  };  }
   factory WorkoutDay.fromMap(Map<String, dynamic> map) {
     return WorkoutDay(
       dayName: map['dayName'] ?? '',
       exercises: List<Exercise>.from(
-        map['exercises']?.map((e) => Exercise.fromMap(e)) ?? [],
-      ),
-      focus: map['focus'] ?? '',
-    );
-  }
+        map['exercises']?.map((e) => Exercise.fromMap(e)) ?? [],   ),
+      focus: map['focus'] ?? '',    );  }
 }
-
 class WorkoutProgram {
-  final String id;
+
+  final String id;  
   final String name;
-  final String description;
+  final String description;  
   final List<WorkoutDay> workoutDays;
-  final String difficulty;
+  final String difficulty;  
   final int durationWeeks;
-  final String goal; // 'weight_loss', 'muscle_gain', 'maintenance', 'strength'
+  final String goal;   
   final DateTime createdAt;
 
   WorkoutProgram({
-    required this.id,
+    required this.id,    
     required this.name,
-    required this.description,
+    required this.description,    
     required this.workoutDays,
-    required this.difficulty,
+    required this.difficulty,    
     required this.durationWeeks,
-    required this.goal,
-    required this.createdAt,
-  });
+    required this.goal,    
+    required this.createdAt,  
+    }
+    );
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': id,      
       'name': name,
       'description': description,
       'workoutDays': workoutDays.map((day) => day.toMap()).toList(),
-      'difficulty': difficulty,
+      'difficulty': difficulty,  
       'durationWeeks': durationWeeks,
-      'goal': goal,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
+      'goal': goal,  
+      'createdAt': createdAt.toIso8601String(),    
+      };
+        }
 
   factory WorkoutProgram.fromMap(Map<String, dynamic> map) {
+
     return WorkoutProgram(
+
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
@@ -121,42 +117,28 @@ class WorkoutProgram {
       difficulty: map['difficulty'] ?? '',
       durationWeeks: map['durationWeeks'] ?? 0,
       goal: map['goal'] ?? '',
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-    );
-  }
-
-  // Generate personalized workout program based on user data
+      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()), 
+        );
+          }
   static WorkoutProgram generateProgram(
-    String userId,
+
+    String userId,    
     String fitnessGoal,
-    String activityLevel,
-    double bmi,
-  ) {
-    String difficulty;
+    String activityLevel,    
+    double bmi,  ) {
+    String difficulty; 
+
     List<WorkoutDay> workoutDays = [];
-    String programName;
-    String description;
-
-    // Determine difficulty based on activity level
+    String programName; 
+    String description;    
     switch (activityLevel) {
-      case 'sedentary':
-      case 'light':
-        difficulty = 'beginner';
-        break;
-      case 'moderate':
-        difficulty = 'intermediate';
-        break;
-      case 'active':
-      case 'very_active':
-        difficulty = 'advanced';
-        break;
-      default:
-        difficulty = 'beginner';
-    }
-
-    // Generate program based on fitness goal
+      case 'sedentary':  case 'light':
+        difficulty = 'beginner';   break;
+      case 'moderate':  difficulty = 'intermediate';   break;
+      case 'active':  case 'very_active':  difficulty = 'advanced';   break;  
+          default:  difficulty = 'beginner';  }   
     switch (fitnessGoal) {
-      case 'lose_weight':
+            case 'lose_weight':
         programName = 'Kilo Verme Programı';
         description = 'Kardiyovasküler egzersizler ve güç antrenmanları ile kilo vermeye odaklanan program';
         workoutDays = _generateWeightLossProgram(difficulty);

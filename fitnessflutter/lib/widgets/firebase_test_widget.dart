@@ -46,9 +46,9 @@ class _FirebaseTestWidgetState extends State<FirebaseTestWidget> {
         throw 'Firestore bağlantısı başarısız: $e';
       }
 
-      // Test 4: Test account creation process (without actually creating)
+
       try {
-        // Just test if the auth methods are available
+       
         debugPrint('Step 4: Testing auth methods availability');
         
         // Test if we can access createUserWithEmailAndPassword method

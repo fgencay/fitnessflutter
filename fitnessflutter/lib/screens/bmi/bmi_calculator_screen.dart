@@ -6,143 +6,91 @@ import '../../models/bmi_model.dart';
 
 class BMICalculatorScreen extends StatefulWidget {
   const BMICalculatorScreen({super.key});
-
   @override
-  State<BMICalculatorScreen> createState() => _BMICalculatorScreenState();
-}
-
+  State<BMICalculatorScreen> createState() => _BMICalculatorScreenState();}
 class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   BMIData? _bmiResult;
   bool _useUserData = true;
-
   @override
   void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
+    super.initState();    _loadUserData();  }
   void _loadUserData() {
     final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
-    final user = authProvider.currentUser;
-    
+    final user = authProvider.currentUser;    
     if (user != null && _useUserData) {
       _heightController.text = user.height.toString();
-      _weightController.text = user.weight.toString();
-    }
-  }
-
+      _weightController.text = user.weight.toString();    }  }
   @override
   void dispose() {
-    _heightController.dispose();
-    _weightController.dispose();
-    super.dispose();
-  }
-
+    _heightController.dispose();    _weightController.dispose();
+        super.dispose();  }
   void _calculateBMI() {
     if (_formKey.currentState!.validate()) {
       final height = double.parse(_heightController.text);
-      final weight = double.parse(_weightController.text);
-      
+      final weight = double.parse(_weightController.text);      
       setState(() {
-        _bmiResult = BMIData.calculateBMI(height, weight);
-      });
-      
-      // Save BMI to provider
-      final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
-      fitnessProvider.calculateBMI(height, weight);
-      
-      // Update user data if different
-      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
+        _bmiResult = BMIData.calculateBMI(height, weight);      });   
+           final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
+      fitnessProvider.calculateBMI(height, weight);    
+          final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       final user = authProvider.currentUser;
       if (user != null && (user.height != height || user.weight != weight)) {
         final updatedUser = user.copyWith(height: height, weight: weight);
-        authProvider.updateUserProfile(updatedUser);
-      }
-    }
-  }
-
+        authProvider.updateUserProfile(updatedUser);      }    }  }
   void _generatePrograms() {
     if (_bmiResult != null) {
       final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
       final fitnessProvider = Provider.of<FitnessProvider>(context, listen: false);
-      final user = authProvider.currentUser;
-      
-      if (user != null) {
-        // Generate both workout and diet programs
+      final user = authProvider.currentUser;      
+      if (user != null) {      
         fitnessProvider.generateWorkoutProgram(user, _bmiResult!);
-        fitnessProvider.generateDietProgram(user, _bmiResult!);
-        
+        fitnessProvider.generateDietProgram(user, _bmiResult!);        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Kişiselleştirilmiş programlarınız oluşturuluyor...'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    }
-  }
-
+            backgroundColor: Colors.green, ),  );
+      }    }  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BMI Hesaplayıcı'),
-        backgroundColor: Colors.orange,
-      ),
+        backgroundColor: Colors.orange,      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
+        child: Form(          key: _formKey,          child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header Section
-              Container(
+            Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.orange, Colors.orange.withValues(alpha: 0.8)],
                     begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                    end: Alignment.bottomRight,                  ),
+                  borderRadius: BorderRadius.circular(16),                ),
                 child: Column(
-                  children: [
-                    const Icon(
-                      Icons.monitor_weight,
-                      size: 60,
-                      color: Colors.white,
-                    ),
+                  children: [   const Icon(
+                      Icons.monitor_weight,   size: 60,
+                      color: Colors.white,    ),
                     const SizedBox(height: 12),
                     const Text(
                       'Vücut Kitle Endeksi',
-                      style: TextStyle(
-                        fontSize: 24,
+                      style: TextStyle(    fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                        color: Colors.white,   ),    ),
                     const SizedBox(height: 8),
                     const Text(
                       'Boy ve kilonuzu girerek BMI değerinizi hesaplayın',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 30),
-              
-              // Use Current Data Toggle
-              Consumer<BaseAuthProvider>(
+                        color: Colors.white70,  ),
+                      textAlign: TextAlign.center,  ),    ], ),  ),              
+              const SizedBox(height: 30),             
+               Consumer<BaseAuthProvider>(
                 builder: (context, authProvider, child) {
                   if (authProvider.currentUser != null) {
                     return Card(
@@ -150,8 +98,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         title: const Text('Mevcut verilerimi kullan'),
                         subtitle: Text(
                           'Boy: ${authProvider.currentUser!.height.toInt()} cm, '
-                          'Kilo: ${authProvider.currentUser!.weight.toInt()} kg',
-                        ),
+                          'Kilo: ${authProvider.currentUser!.weight.toInt()} kg',                        ),
                         value: _useUserData,
                         onChanged: (value) {
                           setState(() {
@@ -161,20 +108,10 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                             } else {
                               _heightController.clear();
                               _weightController.clear();
-                            }
-                          });
-                        },
-                        activeThumbColor: Colors.orange,
-                      ),
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Input Fields
+                            }                          });  },
+                        activeThumbColor: Colors.orange,  ), );  }
+                  return const SizedBox();                },              ),              
+              const SizedBox(height: 20),               
               Row(
                 children: [
                   Expanded(
@@ -192,20 +129,14 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(color: Colors.orange, width: 2),
-                        ),
-                      ),
+                        ),                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Boy gerekli';
-                        }
+                          return 'Boy gerekli';                        }
                         final height = double.tryParse(value);
                         if (height == null || height < 100 || height > 250) {
-                          return 'Geçerli boy (100-250 cm)';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
+                          return 'Geçerli boy (100-250 cm)';                        }
+                        return null;                      },                    ),                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
@@ -221,9 +152,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Colors.orange, width: 2),
-                        ),
-                      ),
+                          borderSide: const BorderSide(color: Colors.orange, width: 2),                        ),                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Kilo gerekli';
@@ -232,17 +161,9 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                         if (weight == null || weight < 30 || weight > 300) {
                           return 'Geçerli kilo (30-300 kg)';
                         }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 30),
-              
-              // Calculate Button
-              ElevatedButton(
+                        return null;                      },                    ),                  ),                ],              ),              
+              const SizedBox(height: 30),            
+                          ElevatedButton(
                 onPressed: _calculateBMI,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
@@ -250,22 +171,15 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                  ),                ),
                 child: const Text(
                   'BMI Hesapla',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
+                ),              ),
               
-              const SizedBox(height: 30),
-              
-              // BMI Result
-              if (_bmiResult != null) _buildBMIResult(),
-              
-              const SizedBox(height: 20),
-              
-              // BMI Information
+              const SizedBox(height: 30),                          
+              if (_bmiResult != null) _buildBMIResult(),              
+              const SizedBox(height: 20),            
               _buildBMIInfo(),
             ],
           ),
@@ -359,23 +273,19 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           ),
         ),
         
-        const SizedBox(height: 20),
-        
-        // Ideal Weight Range
-        Consumer<BaseAuthProvider>(
+        const SizedBox(height: 20),     
+               Consumer<BaseAuthProvider>(
           builder: (context, authProvider, child) {
             if (authProvider.currentUser != null) {
               final height = double.parse(_heightController.text);
-              final idealRange = BMIData.getIdealWeightRange(height);
-              
+              final idealRange = BMIData.getIdealWeightRange(height);              
               return Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
-                ),
+                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),                ),
                 child: Column(
                   children: [
                     const Text(
@@ -403,10 +313,8 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
           },
         ),
         
-        const SizedBox(height: 20),
-        
-        // Generate Programs Button
-        Consumer<FitnessProvider>(
+        const SizedBox(height: 20),        
+               Consumer<FitnessProvider>(
           builder: (context, fitnessProvider, child) {
             return SizedBox(
               width: double.infinity,
@@ -489,10 +397,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
               category,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
+                fontWeight: FontWeight.w500,              ),            ),          ),
           Text(
             range,
             style: TextStyle(

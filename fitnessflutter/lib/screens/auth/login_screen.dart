@@ -8,45 +8,31 @@ import '../../widgets/firestore_rules_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
+  State<LoginScreen> createState() => _LoginScreenState();}
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _rememberMe = true;
-
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
+    _emailController.dispose();    _passwordController.dispose();
+    super.dispose();  }
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);
-      
-      // Clear any previous error messages
-      authProvider.clearError();
-      
+      final authProvider = Provider.of<BaseAuthProvider>(context, listen: false);      
+      authProvider.clearError();      
       final success = await authProvider.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         rememberMe: _rememberMe,
-      );
-
-      if (mounted) {
+      );      if (mounted) {
         if (success) {
           NavigationService.navigateAndClearStack(AppRoutes.dashboard);
-        } else {
-          // Display specific error message from AuthProvider
-          final errorMessage = authProvider.errorMessage ?? 'Giriş sırasında bir hata oluştu';
-          
+        } else {      
+          final errorMessage = authProvider.errorMessage ?? 'Giriş sırasında bir hata oluştu';          
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(errorMessage),
@@ -58,16 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       textColor: Colors.white,
                       onPressed: () {
                         NavigationService.navigateTo(AppRoutes.register);
-                      },
-                    )
-                  : null,
-            ),
-          );
-        }
-      }
-    }
-  }
-
+                      },                    )
+                  : null, ),);}}}}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,15 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 60),
-              
-              // Logo and Title
-              Center(
+              const SizedBox(height: 60),           
+                Center(
                 child: Column(
                   children: [
                     Container(
-                      width: 100,
-                      height: 100,
+                      width: 100, height: 100,
                       decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(50),
@@ -103,28 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1E88E5),
-                      ),
-                    ),
+                      ),                    ),
                     const SizedBox(height: 8),
                     Text(
                       'Hesabınıza giriş yapınız',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 50),
-              
-              // Login Form
-              Form(
+                      ), ), ], ),  ),              
+              const SizedBox(height: 50),          
+             Form(
                 key: _formKey,
                 child: Column(
-                  children: [
-                    // Email Field
+                  children: [            
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -142,12 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
-                    ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // Password Field
-                    TextFormField(
+                    ),                    
+                    const SizedBox(height: 20),                   
+                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
@@ -156,15 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         prefixIcon: const Icon(Icons.lock_outlined),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          ),
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,    ),
                           onPressed: () {
                             setState(() {
                               _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                      ),
+                            });},  ), ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Şifre gerekli';
@@ -173,13 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           return 'Şifre en az 6 karakter olmalı';
                         }
                         return null;
-                      },
-                    ),
-                    
-                    const SizedBox(height: 16),
-                    
-                    
-                    Row(
+                      },                    ),                    
+                    const SizedBox(height: 16),                   
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
@@ -189,19 +144,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               onChanged: (value) {
                                 setState(() {
                                   _rememberMe = value ?? false;
-                                });
-                              },
+                                });                              },
                             ),
                             const Text('Beni hatırla'),
-                          ],
-                        ),
-                        
-                      ],
+                          ],      ),    ],
                     ),
-                    
-                    const SizedBox(height: 30),
-                    
-                    // Login Button
+                    const SizedBox(height: 30),                    
                     Consumer<BaseAuthProvider>(
                       builder: (context, authProvider, child) {
                         return SizedBox(
@@ -214,16 +162,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : const Text(
                                     'Giriş Yap',
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                          ),
-                        );
-                      },
-                    ),
-                    
-                    const SizedBox(height: 30),
-                    
-                    // Divider
-                    Row(
+                                  ),),    );  },   ),                    
+                    const SizedBox(height: 30),                   
+                      Row(
                       children: [
                         Expanded(child: Divider(color: Colors.grey[300])),
                         Padding(
@@ -231,39 +172,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'veya',
                             style: TextStyle(color: Colors.grey[600]),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey[300])),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 30),
-                    
-                    // Register Button
-                    SizedBox(
+                          ),   ),
+                        Expanded(child: Divider(color: Colors.grey[300])),    ],    ),                    
+                    const SizedBox(height: 30),                   
+                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: OutlinedButton(
                         onPressed: () {
-                          NavigationService.navigateTo(AppRoutes.register);
-                        },
+                          NavigationService.navigateTo(AppRoutes.register);     },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: Theme.of(context).primaryColor),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                          ),                        ),
                         child: Text(
                           'Hesap Oluştur',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                    
+                          ),                        ),                      ),                    ),                    
                     const SizedBox(height: 16),
                     
                    

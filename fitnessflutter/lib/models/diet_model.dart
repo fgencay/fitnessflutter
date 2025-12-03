@@ -1,62 +1,32 @@
 class Food {
-  final String name;
-  final double calories; // per 100g
-  final double protein; // per 100g
-  final double carbs; // per 100g
-  final double fat; // per 100g
-  final String category; // 'protein', 'vegetable', 'fruit', 'grain', 'dairy'
-
+  final String name;  final double calories; 
+  final double protein;  final double carbs;
+  final double fat;  final String category; 
   Food({
-    required this.name,
-    required this.calories,
-    required this.protein,
-    required this.carbs,
-    required this.fat,
-    required this.category,
-  });
-
+    required this.name,    required this.calories,
+    required this.protein,    required this.carbs,
+    required this.fat,    required this.category,  });
   Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'calories': calories,
-      'protein': protein,
-      'carbs': carbs,
-      'fat': fat,
+    return { 'name': name,
+      'calories': calories, 'protein': protein,
+      'carbs': carbs,'fat': fat,
       'category': category,
-    };
-  }
-
+    };  }
   factory Food.fromMap(Map<String, dynamic> map) {
     return Food(
-      name: map['name'] ?? '',
-      calories: map['calories'] ?? 0.0,
-      protein: map['protein'] ?? 0.0,
-      carbs: map['carbs'] ?? 0.0,
-      fat: map['fat'] ?? 0.0,
-      category: map['category'] ?? '',
-    );
-  }
-}
-
+      name: map['name'] ?? '', calories: map['calories'] ?? 0.0,
+      protein: map['protein'] ?? 0.0, carbs: map['carbs'] ?? 0.0,
+      fat: map['fat'] ?? 0.0, category: map['category'] ?? '',   );  }}
 class Meal {
-  final String name; // 'Kahvaltı', 'Öğle Yemeği', 'Akşam Yemeği', 'Ara Öğün'
-  final List<FoodItem> foods;
-  final double totalCalories;
-
+  final String name; final List<FoodItem> foods;  final double totalCalories;
   Meal({
-    required this.name,
-    required this.foods,
-    required this.totalCalories,
-  });
-
+    required this.name, required this.foods, required this.totalCalories,  });
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'foods': foods.map((food) => food.toMap()).toList(),
       'totalCalories': totalCalories,
-    };
-  }
-
+    };  }
   factory Meal.fromMap(Map<String, dynamic> map) {
     return Meal(
       name: map['name'] ?? '',
@@ -64,111 +34,58 @@ class Meal {
         map['foods']?.map((food) => FoodItem.fromMap(food)) ?? [],
       ),
       totalCalories: map['totalCalories'] ?? 0.0,
-    );
-  }
-}
-
+    );}}
 class FoodItem {
-  final Food food;
-  final double amount; 
-  final double calories;
-
+  final Food food;  final double amount;   final double calories;
   FoodItem({
-    required this.food,
-    required this.amount,
-    required this.calories,
-  });
-
+    required this.food, required this.amount, required this.calories, });
   Map<String, dynamic> toMap() {
     return {
-      'food': food.toMap(),
-      'amount': amount,
-      'calories': calories,
-    };
-  }
-
+      'food': food.toMap(),'amount': amount, 'calories': calories, };  }
   factory FoodItem.fromMap(Map<String, dynamic> map) {
     return FoodItem(
       food: Food.fromMap(map['food'] ?? {}),
       amount: map['amount'] ?? 0.0,
-      calories: map['calories'] ?? 0.0,
-    );
-  }
-}
-
+      calories: map['calories'] ?? 0.0,    );  }}
 class DayMealPlan {
-  final String dayName;
-  final List<Meal> meals;
-  final double totalCalories;
-  final double totalProtein;
-  final double totalCarbs;
-  final double totalFat;
-
-  DayMealPlan({
-    required this.dayName,
-    required this.meals,
-    required this.totalCalories,
-    required this.totalProtein,
-    required this.totalCarbs,
-    required this.totalFat,
-  });
-
+  final String dayName;  final List<Meal> meals;
+  final double totalCalories;  final double totalProtein;
+  final double totalCarbs;  final double totalFat;
+  DayMealPlan({  required this.dayName,
+    required this.meals, required this.totalCalories,
+    required this.totalProtein,   required this.totalCarbs,
+    required this.totalFat,  });
   Map<String, dynamic> toMap() {
     return {
       'dayName': dayName,
       'meals': meals.map((meal) => meal.toMap()).toList(),
-      'totalCalories': totalCalories,
-      'totalProtein': totalProtein,
-      'totalCarbs': totalCarbs,
-      'totalFat': totalFat,
-    };
-  }
-
+      'totalCalories': totalCalories,'totalProtein': totalProtein,
+      'totalCarbs': totalCarbs, 'totalFat': totalFat,  };  }
   factory DayMealPlan.fromMap(Map<String, dynamic> map) {
     return DayMealPlan(
       dayName: map['dayName'] ?? '',
       meals: List<Meal>.from(
-        map['meals']?.map((meal) => Meal.fromMap(meal)) ?? [],
-      ),
-      totalCalories: map['totalCalories'] ?? 0.0,
-      totalProtein: map['totalProtein'] ?? 0.0,
-      totalCarbs: map['totalCarbs'] ?? 0.0,
-      totalFat: map['totalFat'] ?? 0.0,
-    );
-  }
-}
-
+        map['meals']?.map((meal) => Meal.fromMap(meal)) ?? [],   ),
+   totalCalories: map['totalCalories'] ?? 0.0, totalProtein: map['totalProtein'] ?? 0.0,
+   totalCarbs: map['totalCarbs'] ?? 0.0, totalFat: map['totalFat'] ?? 0.0,    ); }}
 class DietProgram {
-  final String id;
-  final String name;
-  final String description;
-  final List<DayMealPlan> weekPlan;
-  final double dailyCalorieTarget;
-  final String goal; // 'weight_loss', 'muscle_gain', 'maintenance'
+  final String id;  final String name;
+  final String description;  final List<DayMealPlan> weekPlan;
+  final double dailyCalorieTarget;  final String goal; 
   final DateTime createdAt;
-
   DietProgram({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.weekPlan,
-    required this.dailyCalorieTarget,
-    required this.goal,
-    required this.createdAt,
-  });
-
+    required this.id,    required this.name,
+    required this.description,    required this.weekPlan,
+    required this.dailyCalorieTarget,    required this.goal,
+    required this.createdAt,  });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
+      'id': id,      'name': name,
       'description': description,
       'weekPlan': weekPlan.map((day) => day.toMap()).toList(),
       'dailyCalorieTarget': dailyCalorieTarget,
       'goal': goal,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
-
+      'createdAt': createdAt.toIso8601String(),    };  }
   factory DietProgram.fromMap(Map<String, dynamic> map) {
     return DietProgram(
       id: map['id'] ?? '',
@@ -180,20 +97,12 @@ class DietProgram {
       dailyCalorieTarget: map['dailyCalorieTarget'] ?? 0.0,
       goal: map['goal'] ?? '',
       createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-    );
-  }
-
-  // Generate personalized diet program
+    );  }  
   static DietProgram generateDietProgram(
-    String userId,
-    String fitnessGoal,
-    double dailyCalories,
-    double bmi,
-  ) {
-    String programName;
-    String description;
+    String userId,    String fitnessGoal,
+    double dailyCalories,    double bmi,  ) {
+    String programName;    String description;
     double targetCalories;
-
     switch (fitnessGoal) {
       case 'lose_weight':
         programName = 'Kilo Verme Diyeti';
@@ -213,11 +122,8 @@ class DietProgram {
       default:
         programName = 'Sağlıklı Beslenme Programı';
         description = 'Genel sağlık için dengeli beslenme programı';
-        targetCalories = dailyCalories;
-    }
-
+        targetCalories = dailyCalories;    }
     List<DayMealPlan> weekPlan = _generateWeeklyMealPlan(targetCalories, fitnessGoal);
-
     return DietProgram(
       id: '${userId}_diet_${DateTime.now().millisecondsSinceEpoch}',
       name: programName,
@@ -225,55 +131,39 @@ class DietProgram {
       weekPlan: weekPlan,
       dailyCalorieTarget: targetCalories,
       goal: fitnessGoal,
-      createdAt: DateTime.now(),
-    );
-  }
-
+      createdAt: DateTime.now(),    );  }
   static List<DayMealPlan> _generateWeeklyMealPlan(double targetCalories, String goal) {
     List<String> days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
     List<DayMealPlan> weekPlan = [];
-
     for (String day in days) {
       List<Meal> meals = _generateDayMeals(targetCalories, goal);
-      double totalCalories = meals.fold(0, (sum, meal) => sum + meal.totalCalories);
-      
+      double totalCalories = meals.fold(0, (sum, meal) => sum + meal.totalCalories);      
       weekPlan.add(DayMealPlan(
         dayName: day,
         meals: meals,
         totalCalories: totalCalories,
-        totalProtein: totalCalories * 0.25 / 4, // 25% protein
-        totalCarbs: totalCalories * 0.45 / 4, // 45% carbs
-        totalFat: totalCalories * 0.30 / 9, // 30% fat
-      ));
-    }
-
-    return weekPlan;
-  }
-
-  static List<Meal> _generateDayMeals(double targetCalories, String goal) {
-    // Calorie distribution
+        totalProtein: totalCalories * 0.25 / 4, 
+        totalCarbs: totalCalories * 0.45 / 4, 
+        totalFat: totalCalories * 0.30 / 9,       ));    }
+    return weekPlan;  }
+  static List<Meal> _generateDayMeals(double targetCalories, String goal) { 
     double breakfastCalories = targetCalories * 0.25;
     double lunchCalories = targetCalories * 0.35;
     double dinnerCalories = targetCalories * 0.30;
     double snackCalories = targetCalories * 0.10;
-
     return [
       _generateBreakfast(breakfastCalories, goal),
       _generateLunch(lunchCalories, goal),
       _generateDinner(dinnerCalories, goal),
       _generateSnack(snackCalories, goal),
-    ];
-  }
-
+    ];  }
   static Meal _generateBreakfast(double calories, String goal) {
-    List<FoodItem> foods = [];
-    
+    List<FoodItem> foods = [];    
     if (goal == 'lose_weight') {
       foods = [
         FoodItem(
           food: Food(name: 'Yulaf Ezmesi', calories: 68, protein: 2.4, carbs: 12, fat: 1.4, category: 'grain'),
-          amount: 50,
-          calories: 34,
+          amount: 50,    calories: 34,
         ),
         FoodItem(
           food: Food(name: 'Yaban Mersini', calories: 57, protein: 0.7, carbs: 14, fat: 0.3, category: 'fruit'),
@@ -289,8 +179,7 @@ class DietProgram {
           food: Food(name: 'Bal', calories: 304, protein: 0.3, carbs: 82, fat: 0, category: 'grain'),
           amount: 15,
           calories: 46,
-        ),
-      ];
+        ),      ];
     } else if (goal == 'gain_weight') {
       foods = [
         FoodItem(
@@ -307,8 +196,7 @@ class DietProgram {
           food: Food(name: 'Yumurta', calories: 155, protein: 13, carbs: 1.1, fat: 11, category: 'protein'),
           amount: 100,
           calories: 155,
-        ),
-      ];
+        ),      ];
     } else {
       foods = [
         FoodItem(
@@ -329,18 +217,15 @@ class DietProgram {
       ];
     }
 
-    double totalMealCalories = foods.fold(0, (sum, food) => sum + food.calories);
-    
+    double totalMealCalories = foods.fold(0, (sum, food) => sum + food.calories);    
     return Meal(
       name: 'Kahvaltı',
       foods: foods,
       totalCalories: totalMealCalories,
-    );
-  }
+    );  }
 
   static Meal _generateLunch(double calories, String goal) {
-    List<FoodItem> foods = [];
-    
+    List<FoodItem> foods = [];    
     if (goal == 'lose_weight') {
       foods = [
         FoodItem(

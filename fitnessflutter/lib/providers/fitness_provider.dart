@@ -11,82 +11,60 @@ class FitnessProvider extends ChangeNotifier {
   WorkoutProgram? _currentWorkoutProgram;
   DietProgram? _currentDietProgram;
   bool _isLoading = false;
-
   BMIData? get currentBMI => _currentBMI;
   WorkoutProgram? get currentWorkoutProgram => _currentWorkoutProgram;
   DietProgram? get currentDietProgram => _currentDietProgram;
   bool get isLoading => _isLoading;
-
-  // Calculate BMI
   void calculateBMI(double height, double weight) {
     _currentBMI = BMIData.calculateBMI(height, weight);
     notifyListeners();
-    _saveBMIData();
-  }
-
-  // Generate workout program
+    _saveBMIData();  } 
   Future<void> generateWorkoutProgram(User user, BMIData bmi) async {
     _isLoading = true;
     notifyListeners();
-
     try {
-      await Future.delayed(const Duration(seconds: 1)); // Simulate loading
-      
+      await Future.delayed(const Duration(seconds: 1));      
       _currentWorkoutProgram = WorkoutProgram.generateProgram(
         user.id,
         user.fitnessGoal,
         user.activityLevel,
         bmi.bmi,
-      );
-      
+      );      
       await _saveWorkoutProgram();
     } catch (e) {
       debugPrint('Error generating workout program: $e');
     }
-
     _isLoading = false;
     notifyListeners();
   }
-
-  // Generate diet program
   Future<void> generateDietProgram(User user, BMIData bmi) async {
     _isLoading = true;
     notifyListeners();
-
     try {
-      await Future.delayed(const Duration(seconds: 1)); // Simulate loading
-      
-      // Calculate daily calories
+      await Future.delayed(const Duration(seconds: 1));      
       double dailyCalories = bmi.calculateDailyCalories(
         user.weight,
         user.height,
         user.age,
         user.gender,
         user.activityLevel,
-      );
-      
+      );      
       _currentDietProgram = DietProgram.generateDietProgram(
         user.id,
         user.fitnessGoal,
         dailyCalories,
         bmi.bmi,
-      );
-      
+      );      
       await _saveDietProgram();
     } catch (e) {
       debugPrint('Error generating diet program: $e');
     }
-
     _isLoading = false;
     notifyListeners();
-  }
-
-  // Load saved fitness data
+  } 
   Future<void> loadFitnessData(String userId) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      
-      // Load BMI data
+      final prefs = await SharedPreferences.getInstance();        
       final bmiJson = prefs.getString('${userId}_bmi');
       if (bmiJson != null) {
         final bmiMap = json.decode(bmiJson);
@@ -97,32 +75,24 @@ class FitnessProvider extends ChangeNotifier {
           recommendation: bmiMap['recommendation'],
           description: bmiMap['description'],
         );
-      }
-      
-      // Load workout program
+      }         
       final workoutJson = prefs.getString('${userId}_workout');
       if (workoutJson != null) {
         final workoutMap = json.decode(workoutJson);
         _currentWorkoutProgram = WorkoutProgram.fromMap(workoutMap);
-      }
-      
-      // Load diet program
+      }          
       final dietJson = prefs.getString('${userId}_diet');
       if (dietJson != null) {
         final dietMap = json.decode(dietJson);
         _currentDietProgram = DietProgram.fromMap(dietMap);
-      }
-      
+      }      
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading fitness data: $e');
     }
-  }
-
-  // Save BMI data
+  }  
   Future<void> _saveBMIData() async {
-    if (_currentBMI == null) return;
-    
+    if (_currentBMI == null) return;    
     try {
       final prefs = await SharedPreferences.getInstance();
       final bmiMap = {
@@ -131,19 +101,14 @@ class FitnessProvider extends ChangeNotifier {
         'categoryText': _currentBMI!.categoryText,
         'recommendation': _currentBMI!.recommendation,
         'description': _currentBMI!.description,
-      };
-      
-      // Assuming we have access to current user ID
+      };       
       await prefs.setString('current_user_bmi', json.encode(bmiMap));
     } catch (e) {
       debugPrint('Error saving BMI data: $e');
     }
-  }
-
-  // Save workout program
+  } 
   Future<void> _saveWorkoutProgram() async {
-    if (_currentWorkoutProgram == null) return;
-    
+    if (_currentWorkoutProgram == null) return;    
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('current_user_workout', json.encode(_currentWorkoutProgram!.toMap()));
@@ -151,28 +116,21 @@ class FitnessProvider extends ChangeNotifier {
       debugPrint('Error saving workout program: $e');
     }
   }
-
-  // Save diet program
   Future<void> _saveDietProgram() async {
-    if (_currentDietProgram == null) return;
-    
+    if (_currentDietProgram == null) return;    
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('current_user_diet', json.encode(_currentDietProgram!.toMap()));
     } catch (e) {
       debugPrint('Error saving diet program: $e');
     }
-  }
-
-  // Clear all fitness data
+  } 
   void clearFitnessData() {
     _currentBMI = null;
     _currentWorkoutProgram = null;
     _currentDietProgram = null;
     notifyListeners();
-  }
-
-  // Get fitness summary
+  } 
   Map<String, dynamic> getFitnessSummary() {
     return {
       'hasBMI': _currentBMI != null,
